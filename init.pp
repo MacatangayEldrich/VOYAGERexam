@@ -20,7 +20,7 @@ node default{
   }
   
   
-  cron { 'helloworld':   
+  cron { 'memory_check':   
    command => "/home/monitor/scripts/memory_check",   
    hour    => '*',   
    minute  => '*/5',
