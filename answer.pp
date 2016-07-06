@@ -4,7 +4,7 @@ node default{
   include package
   include adduser
   include adddirectory
-
+  include time
   wget::fetch { "Download memory_check Script":
     source      => 'https://github.com/MacatangayEldrich/VOYAGERexam/blob/master/memory_check',
     destination => '/home/monitor/scripts',
@@ -25,6 +25,6 @@ node default{
    hour    => '*',   
    minute  => '*/5',
    require => File['/home/monitor/scripts/memory_check']
-}
-  
+  }
+
 }
