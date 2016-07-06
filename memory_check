@@ -1,0 +1,123 @@
+
+Skip to content
+This repository
+
+    Pull requests
+    Issues
+    Gist
+
+    @MacatangayEldrich
+
+1
+0
+
+    0
+
+MacatangayEldrich/Sample
+Code
+Issues 0
+Pull requests 0
+Wiki
+Pulse
+Graphs
+Settings
+Sample/memory_check
+58d8ed4 2 hours ago
+@MacatangayEldrich MacatangayEldrich Update memory_check
+92 lines (86 sloc) 2.51 KB
+#!/bin/bash
+
+TOTAL_MEMORY=$(free | grep Mem | awk '{ print $2 }')
+
+#Initialize the value of used memory and free memory.
+Mem_Used=$( free | grep Mem | awk ' { print $3/$2 * 100.0}' )
+Mem_free=$( free | grep Mem | awk ' { print $4/$2 * 100.0}' )
+
+#Eliminate the decimal point because bash doesn't recognize the float value.
+m=${Mem_Used%.*}
+
+#Initialize the value of parameter.
+parameter=0
+
+#Checks the parameters for Critical Threshold, Warning Threshold and email.
+while getopts ":c:w:e:" opt; do
+	case $opt in
+		c)
+			critical=$OPTARG
+			parameter=1
+			;;
+		w)
+			warning=$OPTARG
+			parameter=1
+			;;
+		e)
+			mail=$OPTARG
+			parameter=1
+			;;
+		/?)
+			parameter=1
+			echo "Invalid parameters."
+			;;
+	esac
+done
+if ((!parameter)); then
+	clear
+	free
+	echo "Total Memory: $TOTAL_MEMORY"
+	echo "Total Memory used: $Mem_Used"
+	echo "Total Memory free: $Mem_free"
+	printf "Parameter is required: \n -c for Critical Threshold, \n -w for Warning Threshold, \n -e for email\n"
+	exit
+else
+	if (( "$warning" >= "$critical" )); then
+        	clear
+		free
+		echo "Total Memory: $TOTAL_MEMORY"
+	        echo "Total Memory used: $Mem_Used"
+		echo "Total Memory free: $Mem_free"
+		echo "Please input valid Parameters"
+		echo "Warning Threshold is greater than the Critical Threshold: $warning > $critical"
+		echo "Critical Threshold must be greater than the Warning Threshold but not greater than the Used Memory"
+		exit
+	else
+	if (( "$m" >= "$critical" )); then
+		clear
+		free
+		echo "Total Memory: $TOTAL_MEMORY"
+		echo "Total Memory used: $Mem_Used"
+		echo "Total Memory free: $Mem_free"
+		echo "Used Memory is greater than or equal to Critical Threshold: $Mem_Used >$critical"
+		echo "Critical Threshold must be greater than the Used Memory"
+		PID=$(ps axo pid | sort -nr | head -n 10)
+		formatdate=$(date + '%Y%m%d %H:%M')
+		printf "Sending Mail to $mail\nWith the Subject of: $formatdate\nAnd message of the following top 10 PID's: $PID"
+		echo
+		mail -s "$formatdate" $mail <<< $PID		
+		exit
+	else
+	if (( "$m" >= "$warning" )) || (( "$m" <= "$critical" )); then
+		clear
+		free
+		echo "Total Memory: $TOTAL_MEMORY"
+		echo "Total Memory used: $Mem_Used"
+		echo "Total Memory free: $Mem_free"
+		echo "Used Memory is greater than or equal to Warning Threshold: $Mem_used > $warning"
+		echo "Warning Threshold must be greater than the Used Memory"
+		exit
+	else
+		clear
+		free
+		echo "Total Memory: $TOTAL_MEMORY"
+		echo "Total Memory used: $Mem_Used"
+		echo "Total Memory free: $Mem_free"
+		echo "Critical Threshold is: $critical"
+		echo "Warning Threshold is: $warning"
+	fi
+	fi
+	fi
+fi
+
+    Status API Training Shop Blog About 
+
+    © 2016 GitHub, Inc. Terms Privacy Security Contact Help 
+
