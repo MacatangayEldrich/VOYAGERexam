@@ -1,30 +1,4 @@
 
-Skip to content
-This repository
-
-    Pull requests
-    Issues
-    Gist
-
-    @MacatangayEldrich
-
-1
-0
-
-    0
-
-MacatangayEldrich/Sample
-Code
-Issues 0
-Pull requests 0
-Wiki
-Pulse
-Graphs
-Settings
-Sample/memory_check
-58d8ed4 2 hours ago
-@MacatangayEldrich MacatangayEldrich Update memory_check
-92 lines (86 sloc) 2.51 KB
 #!/bin/bash
 
 TOTAL_MEMORY=$(free | grep Mem | awk '{ print $2 }')
