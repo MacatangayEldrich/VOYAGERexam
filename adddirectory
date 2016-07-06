@@ -1,5 +1,0 @@
-class adddirectory{
-file { '/home/monitor/scripts':
-    ensure => 'directory',
-  }
-}
