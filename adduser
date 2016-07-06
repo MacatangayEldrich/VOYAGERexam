@@ -5,3 +5,4 @@
        home => '/home/monitor',
        shell => '/bin/bash',
      }
+  }
