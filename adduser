@@ -1,0 +1,7 @@
+class adduser{
+user { 'monitor':
+ 			 ensure           => 'present',
+       home             => '/home/monitor',
+       shell            => '/bin/bash',
+     }
+}
